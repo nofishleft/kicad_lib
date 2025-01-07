@@ -7,6 +7,7 @@ use crate::{
     convert::{FromSexpr, Parser, SexprListExt, ToSexpr, VecToMaybeSexprVec},
     simple_maybe_from_sexpr, KiCadParseError,
 };
+use crate::common::symbol::PinNames;
 
 /// Stores a collection of symbols which may or may not be derived from other
 /// symbols within the library
@@ -119,7 +120,29 @@ impl FromSexpr for DerivedLibSymbol {
 
         let id = parser.expect_string()?.parse::<LibraryId>()?;
         let extends = parser.expect_string_with_name("extends")?;
+
+        // These properties shouldn't exists,
+        // If they do, they should have the same values as their parent (what they extend),
+        // So we ignore them
+        let _power = parser.maybe_empty_list_with_name("power")?;
+        let _hide_pin_numbers = parser
+            .maybe_list_with_name("pin_numbers")
+            .map(|mut p| {
+                p.expect_symbol_matching("hide")?;
+                p.expect_end()?;
+                Ok::<_, KiCadParseError>(())
+            })
+            .transpose()?
+            .is_some();
+        let _pin_names = parser.maybe::<PinNames>()?;
+        let _exclude_from_sim = parser.maybe_bool_with_name("exclude_from_sim")?;
+        let _in_bom = parser.maybe_bool_with_name("in_bom")?;
+        let _on_board = parser.maybe_bool_with_name("on_board")?;
+
+        // Derived symbols should only be apple to change properties
         let properties = parser.expect_many::<SymbolProperty>()?;
+
+
 
         parser.expect_end()?;
 
