@@ -29,6 +29,7 @@ impl FromSexpr for SymbolLibraryFile {
 
         let version = parser.expect_number_with_name("version")? as u32;
         let generator = parser.expect_string_with_name("generator")?;
+        let _generator_version = parser.expect_string_with_name("generator_version")?;
         let symbols = parser.expect_many::<SymbolDefinition>()?;
 
         parser.expect_end()?;
