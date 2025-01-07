@@ -398,7 +398,7 @@ impl FromSexpr for TextEffects {
 
         let font = parser.expect::<Font>()?;
         let justify = parser.maybe::<Justify>()?;
-        let hide = parser.maybe_symbol_matching("hide");
+        let hide = parser.maybe_bool_with_name("hide")?.unwrap_or(false);
         let href = parser.maybe_string_with_name("href")?;
 
         parser.expect_end()?;
