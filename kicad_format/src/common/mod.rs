@@ -460,8 +460,8 @@ impl FromSexpr for Font {
         let size = parser.expect_with_name::<Vec2D>("size")?;
         let line_spacing = parser.maybe_number_with_name("line_spacing")?;
         let thickness = parser.maybe_number_with_name("thickness")?;
-        let bold = parser.maybe_symbol_matching("bold");
-        let italic = parser.maybe_symbol_matching("italic");
+        let bold = parser.maybe_bool_with_name("bold")?.unwrap_or(false);
+        let italic = parser.maybe_bool_with_name("italic")?.unwrap_or(false);
         let color = parser.maybe::<Color>()?;
 
         parser.expect_end()?;
