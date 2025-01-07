@@ -28,7 +28,7 @@ impl FromSexpr for SymbolLibraryFile {
         parser.expect_symbol_matching("kicad_symbol_lib")?;
 
         let version = parser.expect_number_with_name("version")? as u32;
-        let generator = parser.expect_symbol_with_name("generator")?;
+        let generator = parser.expect_string_with_name("generator")?;
         let symbols = parser.expect_many::<SymbolDefinition>()?;
 
         parser.expect_end()?;
