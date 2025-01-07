@@ -27,6 +27,7 @@ pub struct LibSymbol {
     pub power: bool,
     pub hide_pin_numbers: bool,
     pub pin_names: Option<PinNames>,
+    pub exclude_from_sim: Option<bool>,
     pub in_bom: bool,
     pub on_board: bool,
     pub properties: Vec<SymbolProperty>,
@@ -49,6 +50,7 @@ impl FromSexpr for LibSymbol {
             .transpose()?
             .is_some();
         let pin_names = parser.maybe::<PinNames>()?;
+        let exclude_from_sim = parser.maybe_bool_with_name("exclude_from_sim")?;
         let in_bom = parser.expect_bool_with_name("in_bom")?;
         let on_board = parser.expect_bool_with_name("on_board")?;
         let properties = parser.expect_many::<SymbolProperty>()?;
@@ -61,6 +63,7 @@ impl FromSexpr for LibSymbol {
             power,
             hide_pin_numbers,
             pin_names,
+            exclude_from_sim,
             in_bom,
             on_board,
             properties,
@@ -400,7 +403,7 @@ impl FromSexpr for SymbolProperty {
             position,
             show_name,
             do_not_autoplace,
-            effects,
+            effects
         })
     }
 }

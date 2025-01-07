@@ -390,6 +390,26 @@ impl Parser {
             .is_some())
     }
 
+    pub fn maybe_bool_with_name(
+        &mut self,
+        name: &str,
+    ) -> Result<Option<bool>, KiCadParseError> {
+        let result = self.maybe_symbol_with_name(name)?;
+
+        if let Some(result) = result {
+            match result.as_str() {
+                "yes" => Ok(Some(true)),
+                "no" => Ok(Some(false)),
+                _ => Err(KiCadParseError::InvalidEnumValue {
+                    value: result,
+                    enum_name: "bool",
+                }),
+            }
+        } else {
+            Ok(None)
+        }
+    }
+
     pub fn maybe_symbol_with_name(
         &mut self,
         name: &str,
